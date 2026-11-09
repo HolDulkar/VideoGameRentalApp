@@ -14,7 +14,12 @@ public class RentalController {
     private List<User> users;
     private List<Game> games;
     private List<Rental> rentals;
-
+    
+    // Comptadors independents per generar identificadors únics ja que utilitzam lista.size()`+1 per generrar IDs
+    private int nextUserId = 1;
+    private int nextGameId = 1;
+    private int nextRentalId = 1;
+    
     // Constructor: inicialitza les llistes i carrega les dades inicials
     public RentalController() {
         users = new ArrayList<>();
@@ -27,16 +32,16 @@ public class RentalController {
     // Carrega les dades inicials necessàries per provar l'aplicació
     private void loadInitialData() {
 
-        // Creació dels dos usuaris inicials
-        User user1 = new User(1, "Joan");
-        User user2 = new User(2, "Susana");
+    // Crea els usuaris inicials amb identificadors consecutius
+    User user1 = new User(nextUserId++, "Joan");
+    User user2 = new User(nextUserId++, "Susana");
 
         users.add(user1);
         users.add(user2);
 
-        // Creació dels dos videojocs inicials
-        Game game1 = new Game(1, "Spider-Man 2");
-        Game game2 = new Game(2, "Forza Horizon 5");
+        // Crea els videojocs inicials amb identificadors consecutius
+    Game game1 = new Game(nextGameId++, "Spider-Man 2");
+    Game game2 = new Game(nextGameId++, "Forza Horizon 5");
 
         // Assignació de l'estoc per plataforma
         game1.setStock(Platform.PS5, 5);
@@ -52,12 +57,12 @@ public class RentalController {
         LocalDate today = LocalDate.now();
 
         Rental rental1 = new Rental(
-                1, user1, game1, Platform.PS5,
+                nextRentalId++, user1, game1, Platform.PS5,
                 today, today.plusDays(7)
         );
 
         Rental rental2 = new Rental(
-                2, user2, game2, Platform.XBOX,
+                nextRentalId++, user2, game2, Platform.XBOX,
                 today, today.plusDays(7)
         );
 
@@ -99,8 +104,8 @@ public class RentalController {
             }
         }
 
-        // Genera un identificador nou
-        int newId = users.size() + 1;
+        // Genera un identificador únic per al nou usuari
+        int newId = nextUserId++;
 
         users.add(new User(newId, name));
 
@@ -110,7 +115,8 @@ public class RentalController {
     // Afegeix un videojoc nou amb les plataformes inicialitzades a zero
     public void addGame(String title) {
 
-        int newId = games.size() + 1;
+        // Genera un identificador únic per al nou videojoc
+        int newId = nextGameId++;
 
         Game game = new Game(newId, title);
 
@@ -140,9 +146,9 @@ public class RentalController {
         LocalDate today = LocalDate.now();
         LocalDate returnDate = today.plusDays(7);
 
-        // Genera un identificador nou per al lloguer
-        int newId = rentals.size() + 1;  // "sice" retorna el número d'elements d'una llista
-
+        // Genera un identificador únic per al nou lloguer
+        int newId = nextRentalId++;
+        
         // Crea i guarda el nou lloguer
         Rental rental = new Rental(
                 newId, user, game, platform, today, returnDate

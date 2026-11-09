@@ -55,6 +55,7 @@ public class MainFrame extends JFrame {
 
         // Mostra les dades inicials
         refreshRentalTable();
+        refreshGameList();
     }
 
     // Crea el panell de gestió dels lloguers
@@ -451,6 +452,41 @@ public class MainFrame extends JFrame {
         // Inicialitza el model i la llista de videojocs
         gameListModel = new DefaultListModel<>();
         gameList = new JList<>(gameListModel);
+        
+        // Mostra el títol i l'estoc de cada plataforma
+        gameList.setCellRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+
+                super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus
+                );
+
+                if (value instanceof Game) {
+
+                    Game game = (Game) value;
+
+                    // Construeix el text amb les existències
+                    String stockText = "<html><b>" + game.getTitle()
+                            + "</b><br>"
+                            + "PS5: " + game.getStock(Platform.PS5)
+                            + " | Switch 2: " + game.getStock(Platform.SWITCH2)
+                            + " | Xbox: " + game.getStock(Platform.XBOX)
+                            + " | PC: " + game.getStock(Platform.PC)
+                            + "</html>";
+
+                    setText(stockText);
+                }
+
+                return this;
+            }
+        });
+
+        // Augmenta l'espai entre els videojocs de la llista
+        gameList.setFixedCellHeight(55);
 
         // Carrega els videojocs existents
         refreshGameList();
